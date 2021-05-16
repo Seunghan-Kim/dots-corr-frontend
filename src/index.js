@@ -1,18 +1,17 @@
 import React from "react";
-import { render } from 'react-dom';
-import { ThemeProvider } from "@chakra-ui/react";
+import ReactDOM from 'react-dom';
+import './css/App.css';
 
 import Header from "./components/Header";
-import Todos from "./components/Todos";
+import ItemThemeView from './components/ItemThemeView';
 
 function App() {
   return (
-    <ThemeProvider>
+    <div className="homePage">
       <Header />
-      <Todos />
-    </ThemeProvider>
+      <ItemThemeView />      
+    </div>    
   )
 }
 
-const rootElement = document.getElementById("root")
-render(<App />, rootElement)
+ReactDOM.render(<App />, document.getElementById("root"))

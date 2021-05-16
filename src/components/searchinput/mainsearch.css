@@ -1,0 +1,12 @@
+.searchContainer {
+    /* height: 1.3em; */
+    width: 95%;
+    margin: 10px;
+}
+
+.formTextInput {
+    width: 100%;
+    font-size: 1.3em;
+    border-radius: 0.2em;
+    border-width: 1px;
+}
