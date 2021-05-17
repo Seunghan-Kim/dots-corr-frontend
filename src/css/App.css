@@ -12,3 +12,7 @@
     width: 98%;
     align-items: center;
 }
+
+body {
+    margin: 0;
+}
