@@ -4,19 +4,19 @@ import ScrollBox from './ScrollBox';
 import ColorCard from './ColorCard';
 
 
-const HorizontalScroll = (props) => {
+const HorizontalScroll = ({kind, data, clickHandler}) => {
 
-  let data = props.data;
+  // console.log('is in?')
 
-  if (props.kind === "top30"){
 
-    let data = props.data;
+  if (kind === "top30"){
 
     return(
       <ScrollBox>
         {data.map(({ code, name, 상승률}) =>
-        (
-          <ColorCard name={name} key={code} 상승률={상승률}/>
+        ( <div key={code} onClick={() => {clickHandler(code)}}>
+            <ColorCard name={name} 상승률={상승률} />
+          </div>
         ))}
       </ScrollBox>  
     ) 
@@ -25,8 +25,9 @@ const HorizontalScroll = (props) => {
     return(
       <ScrollBox>
         {data.map(({ code, name, 상승률}) =>
-        (
-          <ColorCard name={name} key={code} 상승률={상승률}/>
+        ( <div key={code} onClick={() => {clickHandler(code)}}>
+            <ColorCard name={name} key={code} 상승률={상승률}/>
+          </div>
         ))}
       </ScrollBox>  
     )

@@ -2,8 +2,8 @@ import React from 'react';
 import './mainsearch.css';
 
 const MainSearch = () => {
-
-    let recomendedItem = "삼성전자"
+    
+    let recomendedItem = "google"
 
     return(
        <div className="searchContainer">
