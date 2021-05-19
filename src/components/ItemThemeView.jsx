@@ -7,9 +7,14 @@ import IndexChart from './IndexChart';
 
 const ItemThemeView = () => {
 
+    const backendUrl = 'http://localhost:8080/'
+    // const backendUrl = 'https://backend-4l5xcufdcq-du.a.run.app/'
+
+
     const [topItems, setTopItems] = useState([])
     const [topThemes, setTopThemes ] = useState([])
-    const [selectedItem, setSelectedItem ] = useState()
+
+    const [selectedItem, setSelectedItem ] = useState('')
     const [selectedTheme, setSelectedTheme] = useState('')
 
     const [itemChartData, setItemChartData] = useState([])
@@ -18,32 +23,7 @@ const ItemThemeView = () => {
     const [placeholderText, setPlaceholderText] = useState('')
     const [whoseTurn, setWhoseTurn] = useState('item')
     const [itemIndex, setItemIndex] = useState(0)
-    const [themeIndex, setThemeIndex] = useState(0)
-    
-
-    const fetchTopItems = async () => {
-        // 다음에 아래의 함수와 병합해서 하나로 만들자
-        // click event에서 코드와 유형을 같이 보내주고, 유형을 url 뒤에 붙여서 보내면 될 것 같음
-        // 그런데 데이터 업데이트는 ? 이부분에만 if를 붙일까?
-
-        const response = await fetch("http://localhost:8080/topitems")
-        // const response = await fetch("https://backend-4l5xcufdcq-du.a.run.app/topitems")
-        const topItems = await response.json()
-        setTopItems(topItems.data)
-        setSelectedItem(topItems.data[0].code)
-
-        getItemChartData(topItems.data[0].code)
-      }
-
-    const fetchTopThemes = async () => {
-        const response = await fetch("http://localhost:8080/topthemes")
-        // const response = await fetch("https://backend-4l5xcufdcq-du.a.run.app/topthemes")
-        const topThemes = await response.json()
-        setTopThemes(topThemes.data)
-        setSelectedTheme(topThemes.data[0].code)
-
-        getThemeChartData(topThemes.data[0].code)
-    }
+    const [themeIndex, setThemeIndex] = useState(0)    
 
     const getItemChartData = (code) => {
 
@@ -88,9 +68,31 @@ const ItemThemeView = () => {
     }
     
     useEffect(() => {
-        fetchTopItems();
-        fetchTopThemes();
-        } , [])    
+        fetch(backendUrl + 'topitems')
+        .then(response => response.json())
+        .then(json => setTopItems(json.data))
+
+        fetch(backendUrl + 'topthemes')
+        .then(response => response.json())
+        .then(json => setTopThemes(json.data))
+        } , []) 
+        
+    useEffect(() => {
+        if (topItems.length !== 0){
+            let selectedCode = topItems[0].code
+            console.log('aaa',topItems)
+            setSelectedItem(selectedCode)
+            getItemChartData(selectedCode)
+        }
+    }, [topItems])
+
+    useEffect(() => {
+        if (topThemes.length !== 0 ){
+            let selectedCode = topThemes[0].code
+            setSelectedTheme(selectedCode)
+            getThemeChartData(selectedCode)
+        }
+    }, [topThemes])
 
     useEffect(() => {
         const changePlaceholderText = () => {   

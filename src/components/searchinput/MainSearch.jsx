@@ -3,8 +3,6 @@ import './mainsearch.css';
 
 const MainSearch = (props) => {
     
-    let recomendedItem = "google"
-
     return(
        <div className="searchContainer">
            <form>
