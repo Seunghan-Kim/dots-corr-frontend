@@ -12,7 +12,8 @@
   overflow-x: scroll;
   -ms-overflow-style: none; /* IE */
   overflow: -moz-scrollbars-none;
-  background-color: azure;
+  background-color: #fbc312;
+  opacity : 0.8;
   border-radius: 5px;
 }
 

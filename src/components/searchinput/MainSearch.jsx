@@ -1,7 +1,7 @@
 import React from 'react';
 import './mainsearch.css';
 
-const MainSearch = () => {
+const MainSearch = (props) => {
     
     let recomendedItem = "google"
 
@@ -11,7 +11,7 @@ const MainSearch = () => {
                <input 
                 className="formTextInput"
                 type="text"
-                placeholder={recomendedItem}
+                placeholder={props.placeholderText}
                />
            </form>
        </div>

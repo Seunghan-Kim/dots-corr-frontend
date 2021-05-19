@@ -9,17 +9,26 @@ const ItemThemeView = () => {
 
     const [topItems, setTopItems] = useState([])
     const [topThemes, setTopThemes ] = useState([])
-    const [selectedItem, setSelectedItem ] = useState('')
+    const [selectedItem, setSelectedItem ] = useState()
     const [selectedTheme, setSelectedTheme] = useState('')
 
     const [itemChartData, setItemChartData] = useState([])
     const [themeChartData, setThemeChartData] = useState([])
+    
+    const [placeholderText, setPlaceholderText] = useState('')
+    const [whoseTurn, setWhoseTurn] = useState('item')
+    const [itemIndex, setItemIndex] = useState(0)
+    const [themeIndex, setThemeIndex] = useState(0)
+    
 
     const fetchTopItems = async () => {
+        // 다음에 아래의 함수와 병합해서 하나로 만들자
+        // click event에서 코드와 유형을 같이 보내주고, 유형을 url 뒤에 붙여서 보내면 될 것 같음
+        // 그런데 데이터 업데이트는 ? 이부분에만 if를 붙일까?
+
         const response = await fetch("http://localhost:8080/topitems")
         // const response = await fetch("https://backend-4l5xcufdcq-du.a.run.app/topitems")
         const topItems = await response.json()
-        console.log(topItems)
         setTopItems(topItems.data)
         setSelectedItem(topItems.data[0].code)
 
@@ -37,6 +46,11 @@ const ItemThemeView = () => {
     }
 
     const getItemChartData = (code) => {
+
+        // 다음에 아래의 함수와 병합해서 하나로 만들자
+        // click event에서 코드와 유형을 같이 보내주고, 유형을 url 뒤에 붙여서 보내면 될 것 같음
+        // 그런데 데이터 업데이트는 ? 이부분에만 if를 붙일까?
+
 
         setSelectedItem(code)
         let newCode = {'code' : code }
@@ -60,8 +74,8 @@ const ItemThemeView = () => {
         setSelectedTheme(code)
 
         let newCode = {'code' : code }
-        let url = 'http://localhost:8080/getchartdata_theme'
-        // let url = "https://backend-4l5xcufdcq-du.a.run.app/getchartdata_theme"       
+        // let url = 'http://localhost:8080/getchartdata_theme'
+        let url = "https://backend-4l5xcufdcq-du.a.run.app/getchartdata_theme"       
 
         fetch(url, {
             method: "POST",
@@ -73,16 +87,39 @@ const ItemThemeView = () => {
           }) 
     }
     
-    useEffect( () => { fetchTopItems()} , [])
-    useEffect( () => { fetchTopThemes()}, [])
+    useEffect(() => {
+        fetchTopItems();
+        fetchTopThemes();
+        } , [])    
+
+    useEffect(() => {
+        const changePlaceholderText = () => {   
+            if (whoseTurn === 'item') {       
+                let currentIndex = itemIndex % topItems.length
+                setPlaceholderText('잘 나가는 종목 :' + topItems[currentIndex].name)
+                setItemIndex(itemIndex => itemIndex + 1)       
+                setWhoseTurn('theme')
+            } else if (whoseTurn === 'theme'){
+                let currentIndex = themeIndex % topThemes.length
+                setPlaceholderText('잘 나가는 테마 :' + topThemes[currentIndex].name)
+                setThemeIndex(themeIndex => themeIndex + 1) 
+                setWhoseTurn('item')
+            }
+        }
+       const timerId = setTimeout(()=> {
+            changePlaceholderText();
+       }, 1500);       
+       return () => clearTimeout(timerId)          
+    }, [whoseTurn, itemIndex, themeIndex, topItems, topThemes])
     
     return(
         <div className="homePage">
-            <MainSearch />
+            <MainSearch placeholderText={placeholderText}/>
             <HorizontalScroll kind={"top30"} data={topItems} clickHandler={getItemChartData}/>
             <HorizontalScroll kind={"theme"} data={topThemes} clickHandler={getThemeChartData}/>
             <IndexChart data={itemChartData} code={selectedItem}/>
             <IndexChart data={themeChartData} code={selectedTheme}/>
+            {/* <div style={{backgroundColor:'white'}}>{count}{text}</div> */}
         </div>
     )
     

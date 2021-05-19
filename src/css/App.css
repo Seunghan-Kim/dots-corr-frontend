@@ -1,7 +1,7 @@
 #root {
     display: flex;
     flex-direction: column;
-    background-color: black;
+    background-color: #191919;
     justify-items: 'center';
     align-items: center;
 }

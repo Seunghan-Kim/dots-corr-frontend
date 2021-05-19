@@ -9,10 +9,10 @@ const IndexChart = (props) => {
             width : '200px',
             margin : '5px'}}
             
-            key={props.date}>
+            >
         
         {data.map(({date, value}) => (
-            <div>
+            <div key={date}>
                 {date} + {value} + {props.code}
             </div>
         ))}
