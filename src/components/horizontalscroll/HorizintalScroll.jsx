@@ -13,6 +13,7 @@ const HorizontalScroll = ({kind, data, clickHandler}) => {
         {data.map(({ code, name, 상승률}) => (
           <ColorCard 
             key={code}
+            kind={kind}
             name={name}
             상승률={상승률}
             code={code}
@@ -27,6 +28,7 @@ const HorizontalScroll = ({kind, data, clickHandler}) => {
           {data.map(({ code, name, 상승률}) => ( 
             <ColorCard 
               key={code}
+              kind={kind}
               name={name} 
               상승률={상승률}
               code={code}

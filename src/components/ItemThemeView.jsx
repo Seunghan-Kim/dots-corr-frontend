@@ -25,37 +25,10 @@ const ItemThemeView = () => {
     const [itemIndex, setItemIndex] = useState(0)
     const [themeIndex, setThemeIndex] = useState(0)    
 
-    const getItemChartData = (code) => {
-
-        // 다음에 아래의 함수와 병합해서 하나로 만들자
-        // click event에서 코드와 유형을 같이 보내주고, 유형을 url 뒤에 붙여서 보내면 될 것 같음
-        // 그런데 데이터 업데이트는 ? 이부분에만 if를 붙일까?
-
-
-        setSelectedItem(code)
-        let newCode = {'code' : code }
-        let url = 'http://localhost:8080/getchartdata_item'
-        // let url = "https://backend-4l5xcufdcq-du.a.run.app/getchartdata_item"
-
-        fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newCode)
-        }).then(response => response.json())
-          .then(data => {setItemChartData(data.data)})
-
-    }
-
-    const getThemeChartData = (code) => {
-        // Cart에서 테마를 누르면 이 함수가 호출되고, 해당 카드의 테마코드가 입력됨
-        // 입력된 코드로 선택된 테마를 update 한 후, backend에 해당 코드에 맞는 데이터를 요청함
-        // 데이터가 들어오면, chart data state를 변경함
-
-        setSelectedTheme(code)
+    const getChartData = (code, kind) => {
+        let url = backendUrl + 'chartdata_' + kind
 
         let newCode = {'code' : code }
-        // let url = 'http://localhost:8080/getchartdata_theme'
-        let url = "https://backend-4l5xcufdcq-du.a.run.app/getchartdata_theme"       
 
         fetch(url, {
             method: "POST",
@@ -63,11 +36,18 @@ const ItemThemeView = () => {
             body: JSON.stringify(newCode)
         }).then(response => response.json())
           .then(json => {
-              setThemeChartData(json.data)
-          }) 
+              if (kind === 'top30') {
+                  setItemChartData(json.data);
+                  setSelectedItem(code)
+            }
+              else if (kind === 'theme') {
+                  setThemeChartData(json.data);
+                  setSelectedTheme(code)                
+                }
+          })
     }
     
-    useEffect(() => {
+    useEffect(() => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
         fetch(backendUrl + 'topitems')
         .then(response => response.json())
         .then(json => setTopItems(json.data))
@@ -77,24 +57,25 @@ const ItemThemeView = () => {
         .then(json => setTopThemes(json.data))
         } , []) 
         
-    useEffect(() => {
+    useEffect(() => { //종목 데이터 다 들어오면 첫번째 종목코드 선정하고 차트를 위한 데이터 불러오기
         if (topItems.length !== 0){
             let selectedCode = topItems[0].code
             console.log('aaa',topItems)
             setSelectedItem(selectedCode)
-            getItemChartData(selectedCode)
+            // getItemChartData(selectedCode, 'top30')
+            getChartData(selectedCode, 'top30')
         }
     }, [topItems])
 
-    useEffect(() => {
+    useEffect(() => { //테마 데이터 다 들어오면 첫번째 테마코드 선정하고 차트를 위한 데이터 불러오기
         if (topThemes.length !== 0 ){
             let selectedCode = topThemes[0].code
             setSelectedTheme(selectedCode)
-            getThemeChartData(selectedCode)
+            getChartData(selectedCode, 'theme')
         }
     }, [topThemes])
 
-    useEffect(() => {
+    useEffect(() => { // 일정시간 마다 탐색창 추천 아이템 변경해주기
         const changePlaceholderText = () => {   
             if (whoseTurn === 'item') {       
                 let currentIndex = itemIndex % topItems.length
@@ -117,8 +98,8 @@ const ItemThemeView = () => {
     return(
         <div className="homePage">
             <MainSearch placeholderText={placeholderText}/>
-            <HorizontalScroll kind={"top30"} data={topItems} clickHandler={getItemChartData}/>
-            <HorizontalScroll kind={"theme"} data={topThemes} clickHandler={getThemeChartData}/>
+            <HorizontalScroll kind={"top30"} data={topItems} clickHandler={getChartData}/>
+            <HorizontalScroll kind={"theme"} data={topThemes} clickHandler={getChartData}/>
             <IndexChart data={itemChartData} code={selectedItem}/>
             <IndexChart data={themeChartData} code={selectedTheme}/>
             {/* <div style={{backgroundColor:'white'}}>{count}{text}</div> */}
