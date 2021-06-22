@@ -116,7 +116,7 @@ const ItemThemeView = () => {
         <div className="homePage">
             <MainSearch placeholderText={placeholderText}/>
             <HorizontalScroll kind={"top30"} data={topItems} clickHandler={getChartData}/>
-            <HorizontalScroll kind={"theme"} data={topThemes} clickHandler={getChartData}/>
+            {/* <HorizontalScroll kind={"theme"} data={topThemes} clickHandler={getChartData}/> */}
             {/* <IndexChart data={itemChartData} code={selectedItem}/> */}
             {/* <IndexChart data={themeChartData} code={selectedTheme}/> */}
             {/* <div style={{backgroundColor:'white'}}>{count}{text}</div> */}
