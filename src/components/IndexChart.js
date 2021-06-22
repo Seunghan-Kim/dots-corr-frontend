@@ -11,9 +11,9 @@ const IndexChart = (props) => {
             
             >
         
-        {data.map(({date, value}) => (
+        {data.map(({종가, date}) => (
             <div key={date}>
-                {date} + {value} + {props.code}
+                {종가} + {date} + {props.code}
             </div>
         ))}
         </div>

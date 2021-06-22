@@ -17,7 +17,7 @@ function ColorCard({ kind, name, 상승률, code, clickHandler }) {
 
   return (
     <div className="color-card" onClick={() => {clickHandler(code, kind)}}>
-      <div className="color-card_yield" >{상승률}</div>
+      <div className="color-card_yield" >{parseFloat(상승률).toFixed(1)}</div>
       <div className="color-card__name" style={{fontSize : fontSizeAdj}} >{name}</div>
     </div>
   );
