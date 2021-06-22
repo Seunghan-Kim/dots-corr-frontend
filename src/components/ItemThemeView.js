@@ -20,8 +20,8 @@ console.log(today)
 const ItemThemeView = () => {
 
 
-    const backendUrl = 'http://localhost:8080/';
-    // const backendUrl = 'https://backend-v31-s5icpxfxda-uc.a.run.app/'
+    // const backendUrl = 'http://localhost:8080/';
+    const backendUrl = 'https://backend-v31-s5icpxfxda-uc.a.run.app/'
 
 
     const [topItems, setTopItems] = useState([])
@@ -37,14 +37,14 @@ const ItemThemeView = () => {
     const [whoseTurn, setWhoseTurn] = useState('item')
     const [itemIndex, setItemIndex] = useState(0)
     const [themeIndex, setThemeIndex] = useState(0)
-    const [dateRef, setDateRef] = useState(today)   
+    const [dateRef1, setDateRef] = useState(today)   
 
-    const date_ref = useRef('20210621')
+    // const dateRef = useRef('20210621')
 
     const getChartData = (code, kind) => {
         let url = backendUrl + 'chartdata_' + kind
 
-        let newCode = {'code' : code, 'date': date_ref.current }
+        let newCode = {'code' : code, 'date': dateRef1 }
 
         fetch(url, {
             method: "POST",
@@ -65,14 +65,14 @@ const ItemThemeView = () => {
     }
     
     useEffect(() => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
-        fetch(backendUrl + `topitems/${dateRef}`)
+        fetch(backendUrl + `topitems/${dateRef1}`)
         .then(response => response.json())
         .then(json => setTopItems(json.data))
 
         fetch(backendUrl + 'topthemes')
         .then(response => response.json())
         .then(json => setTopThemes(json.data))
-        } , []) 
+        } , [dateRef1]) 
         
     useEffect(() => { //종목 데이터 다 들어오면 첫번째 종목코드 선정하고 차트를 위한 데이터 불러오기
         if (topItems.length !== 0){
