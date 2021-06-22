@@ -5,6 +5,8 @@ import HorizontalScroll from './horizontalscroll/HorizintalScroll';
 import IndexChart from './IndexChart';
 
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+// import { background } from '@chakra-ui/react';
+import Button from '@material-ui/core/Button';
 
 let today = new Date();
 let dd = String(today.getDate()).padStart(2, '0');
@@ -111,6 +113,21 @@ const ItemThemeView = () => {
        }, 1500);       
        return () => clearTimeout(timerId)          
     }, [whoseTurn, itemIndex, themeIndex, topItems, topThemes])
+
+    const decreaseDate = () => {
+        let currentDate = parseInt(dateRef1)
+        let newDate = String(currentDate - 1)
+        setDateRef(newDate)
+        console.log('back')
+    }
+
+
+    const increaseDate = () => {
+        let currentDate = parseInt(dateRef1)
+        let newDate = String(currentDate + 1)
+        setDateRef(newDate)
+        console.log('fwd')
+    }
     
     return(
         <div className="homePage">
@@ -123,8 +140,8 @@ const ItemThemeView = () => {
             {/* <ResponsiveContainer width="100%" height="100%"> */}
             <div className="LineChartContainer">
                 <LineChart
-                    width={500}
-                    height={300}
+                    width={370}
+                    height={250}
                     data={itemChartData}
                     margin={{
                         top: 5,
@@ -141,6 +158,12 @@ const ItemThemeView = () => {
                     {/* <Line type="monotone" dataKey="y" stroke="#8884d8" activeDot={{ r: 8 }} /> */}
                     <Line type="monotone" dataKey="종가" stroke="#82ca9d" />
                 </LineChart>
+            </div>
+            <div>
+            <Button variant="contained" onClick={()=>decreaseDate()}>뒤로</Button>
+            <Button variant="contained" color="primary" onClick={()=>increaseDate()}>
+                앞으로
+            </Button>
             </div>
             {/* </ResponsiveContainer> */}
         </div>
