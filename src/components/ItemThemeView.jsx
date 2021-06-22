@@ -4,11 +4,22 @@ import MainSearch from './searchinput/MainSearch';
 import HorizontalScroll from './horizontalscroll/HorizintalScroll';
 import IndexChart from './IndexChart';
 
+let today = new Date();
+let dd = String(today.getDate()).padStart(2, '0');
+let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+let yyyy = today.getFullYear();
+
+today = yyyy + mm + dd ;
+
+today = '20210621'
+
+console.log(today)
 
 const ItemThemeView = () => {
 
+
     const backendUrl = 'http://localhost:8080/'
-    // const backendUrl = 'https://backend-4l5xcufdcq-du.a.run.app/'
+    // const backendUrl = 'https://backend-v31-s5icpxfxda-uc.a.run.app/'
 
 
     const [topItems, setTopItems] = useState([])
@@ -23,7 +34,8 @@ const ItemThemeView = () => {
     const [placeholderText, setPlaceholderText] = useState('')
     const [whoseTurn, setWhoseTurn] = useState('item')
     const [itemIndex, setItemIndex] = useState(0)
-    const [themeIndex, setThemeIndex] = useState(0)    
+    const [themeIndex, setThemeIndex] = useState(0)
+    const [dateRef, setDateRef] = useState(today)   
 
     const getChartData = (code, kind) => {
         let url = backendUrl + 'chartdata_' + kind
@@ -48,7 +60,7 @@ const ItemThemeView = () => {
     }
     
     useEffect(() => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
-        fetch(backendUrl + 'topitems')
+        fetch(backendUrl + `topitems/${dateRef}`)
         .then(response => response.json())
         .then(json => setTopItems(json.data))
 
