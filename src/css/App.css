@@ -6,7 +6,7 @@
 #root {
     /* display: flex;
     flex-direction: column; */
-    background-color: rgb(242, 240, 235);
+    background-color: rgb(242, 240, 235);    
     /* justify-items: 'center';
     align-items: center; */
 }
@@ -20,6 +20,7 @@
 
 body {
     margin: 0;
+    overflow-x: hidden;
 }
 
 
