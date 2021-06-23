@@ -11,7 +11,9 @@
     flex-direction: column-reverse;
     margin-top: 10px;
     margin-bottom: 10px;
-    background-color: white;
+    /* background-color: white; */
+    background-color: rgb(50,114,78);
+    color: white;
   }
 
 .color-card:active {

@@ -13,7 +13,8 @@
   overflow-x: scroll;
   -ms-overflow-style: none; /* IE */
   overflow: -moz-scrollbars-none;
-  background-color: rgb(50,114,78);
+  /* background-color: rgb(50,114,78); */
+  background-color: rgb(242, 240, 235);
   opacity : 0.8;
   border-radius: 5px;
   padding: 0.2rem;
