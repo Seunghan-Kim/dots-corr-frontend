@@ -16,7 +16,7 @@ function ColorCard({ kind, name, 상승률, code, clickHandler }) {
   let fontSizeAdj= adjFontSize(name.length)
 
   return (
-    <div className="color-card" onClick={() => {clickHandler(code, kind)}}>
+    <div className="color-card" onClick={() => {clickHandler(code, kind, name)}}>
       <div className="color-card_yield" >{parseFloat(상승률).toFixed(1)}</div>
       <div className="color-card__name" style={{fontSize : fontSizeAdj}} >{name}</div>
     </div>

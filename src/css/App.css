@@ -1,18 +1,26 @@
+@font-face {
+    font-family: 'NanumSquareRoundB';
+    src: url('../fonts/NanumSquareRoundB.ttf') format('truetype');
+}
+
 #root {
-    display: flex;
-    flex-direction: column;
-    background-color: #191919;
-    justify-items: 'center';
-    align-items: center;
+    /* display: flex;
+    flex-direction: column; */
+    background-color: rgb(242, 240, 235);
+    /* justify-items: 'center';
+    align-items: center; */
 }
 
 .homePage {
     display: flex;
     flex-direction: column;
-    width: 98%;
+    width: 100%;
     align-items: center;
 }
 
 body {
     margin: 0;
 }
+
+
+

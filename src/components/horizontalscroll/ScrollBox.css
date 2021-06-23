@@ -6,15 +6,17 @@
   }
   
 .scroll-box__wrapper {
+  margin-top: 1rem;
   width: 100%;
   height: 100%;
   overflow-y: hidden;
   overflow-x: scroll;
   -ms-overflow-style: none; /* IE */
   overflow: -moz-scrollbars-none;
-  background-color: #fbc312;
+  background-color: rgb(50,114,78);
   opacity : 0.8;
   border-radius: 5px;
+  padding: 0.2rem;
 }
 
 .scroll-box__wrapper::-webkit-scrollbar {

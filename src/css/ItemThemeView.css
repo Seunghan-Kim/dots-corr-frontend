@@ -1,0 +1,56 @@
+@font-face {
+    font-family: 'NanumSquareRoundB';
+    src: url('../fonts/NanumSquareRoundB.ttf') format('truetype');
+}
+
+.container {
+    width: 100%;
+    font-family: 'NanumSquareRoundB';
+}
+
+.chartContainer {
+    margin-top: 10px;
+    width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0.1rem 0 0.1rem gray, -0.1rem 0 .4rem gray;
+    border-radius: 0.2rem;
+    margin-bottom: 1.4rem;
+
+    z-index: 100;
+    background-color: rgb(249,249,249);
+}
+
+.dateSelectorContainer {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    margin-left: auto;
+    margin-right:auto;
+    margin-top: 10px;
+
+}
+
+.dateAdjustButton {
+    display: inline-block;
+}
+
+.dateText {
+    margin-left: 1rem;
+    margin-right: 1rem;
+    height: 2rem;
+    line-height: 2rem;
+}
+
+.itemScrollBoxContainer {
+    position: sticky;
+    bottom: 0;
+}
+
+
+.chartItemName {
+    width: 100%;
+    padding-left: 1rem;
+    padding-top: 0.6rem;
+    padding-bottom: 0.4rem;
+}

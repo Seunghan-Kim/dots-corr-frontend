@@ -3,10 +3,11 @@ import React, { useState, useEffect, useRef, PureComponent } from 'react';
 import MainSearch from './searchinput/MainSearch';
 import HorizontalScroll from './horizontalscroll/HorizintalScroll';
 import IndexChart from './IndexChart';
-
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-// import { background } from '@chakra-ui/react';
+
+import { background } from '@chakra-ui/react';
 import Button from '@material-ui/core/Button';
+import '../css/ItemThemeView.css';
 
 let today = new Date();
 let dd = String(today.getDate()).padStart(2, '0');
@@ -15,7 +16,7 @@ let yyyy = today.getFullYear();
 
 today = yyyy + mm + dd ;
 
-today = '20210621'
+let refData = String(parseInt(today) - 1);
 
 console.log(today)
 
@@ -30,6 +31,7 @@ const ItemThemeView = () => {
     const [topThemes, setTopThemes ] = useState([])
 
     const [selectedItem, setSelectedItem ] = useState('')
+    const [selectedItemName, setSelectedItemName] = useState('')
     const [selectedTheme, setSelectedTheme] = useState('')
 
     const [itemChartData, setItemChartData] = useState([])
@@ -39,11 +41,11 @@ const ItemThemeView = () => {
     const [whoseTurn, setWhoseTurn] = useState('item')
     const [itemIndex, setItemIndex] = useState(0)
     const [themeIndex, setThemeIndex] = useState(0)
-    const [dateRef1, setDateRef] = useState(today)   
+    const [dateRef1, setDateRef] = useState(refData)   
 
     // const dateRef = useRef('20210621')
 
-    const getChartData = (code, kind) => {
+    const getChartData = (code, kind, name) => {
         let url = backendUrl + 'chartdata_' + kind
 
         let newCode = {'code' : code, 'date': dateRef1 }
@@ -58,13 +60,25 @@ const ItemThemeView = () => {
                   setItemChartData(json.data);
                   console.log(json.data)
                   setSelectedItem(code)
+                  setSelectedItemName(name)
+                  console.log(name)                 
             }
               else if (kind === 'theme') {
                   setThemeChartData(json.data);
                   setSelectedTheme(code)                
                 }
           })
+
+        getCorrData(code, dateRef1);
     }
+
+    const getCorrData = (code, date_ref) => {
+        fetch(backendUrl + `get_corr/${code}/${date_ref}`)
+        .then(response => response.json())
+        .then(json => console.log(json.data))
+
+    }
+
     
     useEffect(() => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
         fetch(backendUrl + `topitems/${dateRef1}`)
@@ -78,11 +92,14 @@ const ItemThemeView = () => {
         
     useEffect(() => { //종목 데이터 다 들어오면 첫번째 종목코드 선정하고 차트를 위한 데이터 불러오기
         if (topItems.length !== 0){
-            let selectedCode = topItems[0].code
+            let selectedItemCode = topItems[0].code
+            let selectedItemName = topItems[0].name
             console.log('aaa',topItems)
-            setSelectedItem(selectedCode)
+            setSelectedItem(selectedItemCode)
+            setSelectedItemName(selectedItemName)
             // getItemChartData(selectedCode, 'top30')
-            getChartData(selectedCode, 'top30')
+            getChartData(selectedItemCode, 'top30', selectedItemName)
+
         }
     }, [topItems])
 
@@ -121,7 +138,6 @@ const ItemThemeView = () => {
         console.log('back')
     }
 
-
     const increaseDate = () => {
         let currentDate = parseInt(dateRef1)
         let newDate = String(currentDate + 1)
@@ -130,42 +146,48 @@ const ItemThemeView = () => {
     }
     
     return(
-        <div className="homePage">
-            <MainSearch placeholderText={placeholderText}/>
-            <HorizontalScroll kind={"top30"} data={topItems} clickHandler={getChartData}/>
+        <div className='container'>
+            {/* <MainSearch placeholderText={placeholderText}/> */}
+            
             {/* <HorizontalScroll kind={"theme"} data={topThemes} clickHandler={getChartData}/> */}
             {/* <IndexChart data={itemChartData} code={selectedItem}/> */}
             {/* <IndexChart data={themeChartData} code={selectedTheme}/> */}
             {/* <div style={{backgroundColor:'white'}}>{count}{text}</div> */}
             {/* <ResponsiveContainer width="100%" height="100%"> */}
-            <div className="LineChartContainer">
+            <div className='chartContainer'>
+                <div className='chartItemName'>{selectedItemName}</div>
                 <LineChart
-                    width={370}
+                    width={360}
                     height={250}
                     data={itemChartData}
                     margin={{
                         top: 5,
                         right: 30,
-                        left: 20,
+                        left: 0,
                         bottom: 5,
                     }}
+                    fontSize={10}
                     >
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="date" />
                     <YAxis />
                     <Tooltip />
-                    <Legend />
+                    {/* <Legend /> */}
                     {/* <Line type="monotone" dataKey="y" stroke="#8884d8" activeDot={{ r: 8 }} /> */}
-                    <Line type="monotone" dataKey="종가" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="종가" stroke="#82ca9d" dot={false}/>
                 </LineChart>
+                
             </div>
-            <div>
-            <Button variant="contained" onClick={()=>decreaseDate()}>뒤로</Button>
-            <Button variant="contained" color="primary" onClick={()=>increaseDate()}>
-                앞으로
-            </Button>
+            
+            <div className='dateSelectorContainer'>
+                <Button variant="contained" onClick={()=>decreaseDate()}>뒤로</Button>
+                <div className='dateText'>{dateRef1}</div>
+                <Button variant="contained" color="primary" onClick={()=>increaseDate()}>앞으로</Button>
             </div>
-            {/* </ResponsiveContainer> */}
+            <div className='itemScrollBoxContainer'>
+            <HorizontalScroll kind={"top30"} data={topItems} clickHandler={getChartData}/>
+            </div>
+            
         </div>
     )
     
