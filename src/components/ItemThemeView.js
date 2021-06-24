@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef, PureComponent } from 'react';
 
-import MainSearch from './searchinput/MainSearch';
 import HorizontalScroll from './horizontalscroll/HorizintalScroll';
-import IndexChart from './IndexChart';
+import HorizontalScrollCorr from './horizontalscroll/HorizintalScrollCorr';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 import { background } from '@chakra-ui/react';
@@ -18,7 +17,15 @@ today = yyyy + mm + dd ;
 
 let refData = String(parseInt(today) - 1);
 
-console.log(today)
+console.log(refData)
+
+function getWindowDimensions() {
+    const { innerWidth: width, innerHeight: height } = window;
+    return {
+      width,
+      height
+    };
+  }
 
 const ItemThemeView = () => {
 
@@ -43,10 +50,14 @@ const ItemThemeView = () => {
     const [themeIndex, setThemeIndex] = useState(0)
     const [dateRef1, setDateRef] = useState(refData)   
 
-    // const dateRef = useRef('20210621')
+    const [corrData, setCorrData] = useState([])
+    const isFirstRender = useRef(true)
+
+    const heightRef = useRef(getWindowDimensions().height)
 
     const getChartData = (code, kind, name) => {
         let url = backendUrl + 'chartdata_' + kind
+        console.log(code, name)
 
         let newCode = {'code' : code, 'date': dateRef1 }
 
@@ -56,82 +67,57 @@ const ItemThemeView = () => {
             body: JSON.stringify(newCode)
         }).then(response => response.json())
           .then(json => {
+              console.log('json', json)
               if (kind === 'top30') {
                   setItemChartData(json.data);
                   console.log(json.data)
                   setSelectedItem(code)
                   setSelectedItemName(name)
-                  console.log(name)                 
+                                
             }
               else if (kind === 'theme') {
                   setThemeChartData(json.data);
                   setSelectedTheme(code)                
                 }
-          })
-
-        getCorrData(code, dateRef1);
+          }).then(()=>{
+              getCorrData(code)
+            })        
     }
 
-    const getCorrData = (code, date_ref) => {
-        fetch(backendUrl + `get_corr/${code}/${date_ref}`)
+    const getCorrData = (code) => {
+        console.log(code)
+        fetch(backendUrl + `corr2/${code}`)
         .then(response => response.json())
-        .then(json => console.log(json.data))
-
+        .then(json => {
+            
+            setCorrData(json.data)
+            console.log('corr', json.data)
+        })
     }
 
     
     useEffect(() => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
         fetch(backendUrl + `topitems/${dateRef1}`)
         .then(response => response.json())
-        .then(json => setTopItems(json.data))
-
-        fetch(backendUrl + 'topthemes')
-        .then(response => response.json())
-        .then(json => setTopThemes(json.data))
+        .then(json => setTopItems(json.data))        
         } , [dateRef1]) 
+
         
     useEffect(() => { //종목 데이터 다 들어오면 첫번째 종목코드 선정하고 차트를 위한 데이터 불러오기
-        if (topItems.length !== 0){
+        if (topItems.length !== 0 && isFirstRender.current){
             let selectedItemCode = topItems[0].code
             let selectedItemName = topItems[0].name
-            console.log('aaa',topItems)
+            console.log('firts code',selectedItemCode)
             setSelectedItem(selectedItemCode)
             setSelectedItemName(selectedItemName)
             // getItemChartData(selectedCode, 'top30')
             getChartData(selectedItemCode, 'top30', selectedItemName)
-
+            isFirstRender.current = false
         }
     }, [topItems])
 
-    useEffect(() => { //테마 데이터 다 들어오면 첫번째 테마코드 선정하고 차트를 위한 데이터 불러오기
-        if (topThemes.length !== 0 ){
-            let selectedCode = topThemes[0].code
-            setSelectedTheme(selectedCode)
-            getChartData(selectedCode, 'theme')
-        }
-    }, [topThemes])
-
-    useEffect(() => { // 일정시간 마다 탐색창 추천 아이템 변경해주기
-        const changePlaceholderText = () => {   
-            if (whoseTurn === 'item') {       
-                let currentIndex = itemIndex % topItems.length
-                setPlaceholderText('잘 나가는 종목 :' + topItems[currentIndex].name)
-                setItemIndex(itemIndex => itemIndex + 1)       
-                setWhoseTurn('theme')
-            } else if (whoseTurn === 'theme'){
-                let currentIndex = themeIndex % topThemes.length
-                setPlaceholderText('잘 나가는 테마 :' + topThemes[currentIndex].name)
-                setThemeIndex(themeIndex => themeIndex + 1) 
-                setWhoseTurn('item')
-            }
-        }
-       const timerId = setTimeout(()=> {
-            changePlaceholderText();
-       }, 1500);       
-       return () => clearTimeout(timerId)          
-    }, [whoseTurn, itemIndex, themeIndex, topItems, topThemes])
-
     const decreaseDate = () => {
+        isFirstRender.current = true
         let currentDate = parseInt(dateRef1)
         let newDate = String(currentDate - 1)
         setDateRef(newDate)
@@ -139,6 +125,7 @@ const ItemThemeView = () => {
     }
 
     const increaseDate = () => {
+        isFirstRender.current = true
         let currentDate = parseInt(dateRef1)
         let newDate = String(currentDate + 1)
         setDateRef(newDate)
@@ -146,7 +133,7 @@ const ItemThemeView = () => {
     }
     
     return(
-        <div className='container'>
+        <div className='mainContainer'>
             {/* <MainSearch placeholderText={placeholderText}/> */}
             
             {/* <HorizontalScroll kind={"theme"} data={topThemes} clickHandler={getChartData}/> */}
@@ -176,17 +163,32 @@ const ItemThemeView = () => {
                     {/* <Line type="monotone" dataKey="y" stroke="#8884d8" activeDot={{ r: 8 }} /> */}
                     <Line type="monotone" dataKey="종가" stroke="#82ca9d" dot={false}/>
                 </LineChart>
+                               
+                
                 
             </div>
+            <div className='itemScrollBoxContainer'>           
+                <div className='top30HeraderContainer'>
+                    <div className='top30DateText'>{selectedItemName}</div>
+                    <div className='top30HeaderText'>와 주가 변동이 비슷한 종목들</div>
+                </div>
+                <HorizontalScrollCorr data={corrData} clickHandler={getChartData}/>   
+            </div>
             
+            <div className='itemScrollBoxContainer'>
+                <div className='top30HeraderContainer'>
+                    <div className='top30DateText'>{dateRef1.slice(4,8)}</div>
+                    <div className='top30HeaderText'>상승률 TOP30</div>
+                </div>
+                <HorizontalScroll kind={"top30"} data={topItems} clickHandler={getChartData}/>
+            </div>
+
             <div className='dateSelectorContainer'>
                 <Button variant="contained" onClick={()=>decreaseDate()}>뒤로</Button>
                 <div className='dateText'>{dateRef1}</div>
                 <Button variant="contained" color="primary" onClick={()=>increaseDate()}>앞으로</Button>
             </div>
-            <div className='itemScrollBoxContainer'>
-            <HorizontalScroll kind={"top30"} data={topItems} clickHandler={getChartData}/>
-            </div>
+            
             
         </div>
     )

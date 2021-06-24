@@ -18,11 +18,23 @@
     align-items: center;
 }
 
-body, html {
+body {
     margin: 0;
     max-width: 100%;
     overflow-x: hidden;
+    height: 100vh;
+    /* overflow-y: hidden; */
 }
+
+html {
+    margin: 0;
+    max-width: 100%;
+    overflow-x: hidden;
+    /* overflow-y: hidden; */
+    /* height: 100%; */
+}
+
+
 
 
 

@@ -3,9 +3,11 @@
     src: url('../fonts/NanumSquareRoundB.ttf') format('truetype');
 }
 
-.container {
+.mainContainer {
+    position: relative;
     width: 100%;
     font-family: 'NanumSquareRoundB';
+    padding-top: 0.6rem;
 }
 
 .chartContainer {
@@ -16,7 +18,6 @@
     box-shadow: 0.1rem 0 0.1rem gray, -0.1rem 0 .4rem gray;
     border-radius: 0.2rem;
     margin-bottom: 1.4rem;
-
     z-index: 100;
     background-color: rgb(249,249,249);
 }
@@ -27,7 +28,10 @@
     width: fit-content;
     margin-left: auto;
     margin-right:auto;
-    margin-top: 10px;
+    margin-top: 0.6rem;
+    position: sticky;
+    bottom: 0rem;
+    margin-bottom: 0.6rem;
 
 }
 
@@ -43,8 +47,9 @@
 }
 
 .itemScrollBoxContainer {
-    position: sticky;
-    bottom: 0;
+    /* position: fixed; */
+    /* bottom: 3.8rem; */
+    margin-bottom: 1.2rem;
 }
 
 
@@ -53,4 +58,40 @@
     padding-left: 1rem;
     padding-top: 0.6rem;
     padding-bottom: 0.4rem;
+}
+
+
+.top30HeraderContainer {
+    display: flex;
+    flex-direction: row;
+    /* margin-top: 2rem; */
+}
+
+.top30DateText  {
+    /* margin-top: 2rem; */
+    width:fit-content;
+    margin-left: 1rem;
+    color: brown;
+    font-size: 1.2rem;
+    /* height: 1.4rem;
+    line-height: 1.4rem; */
+    margin-top: 0.8rem;
+    
+}
+
+.top30HeaderText {
+    width:fit-content;
+    margin-left: 1rem;
+    /* color: brown; */
+    font-size: 1.2rem;
+    /* height: 1.4rem;
+    line-height: 1.4rem; */
+    margin-top: 0.8rem;
+}
+
+.aa {
+    /* padding-top: 0.2rem; */
+    position: sticky;
+    bottom: 0;
+    background-color:  rgb(242, 240, 235);
 }
