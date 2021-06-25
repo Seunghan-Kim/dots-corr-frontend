@@ -8,6 +8,7 @@
     width: 100%;
     font-family: 'NanumSquareRoundB';
     padding-top: 0.6rem;
+    padding-bottom: 4rem;
 }
 
 .chartContainer {
@@ -25,13 +26,15 @@
 .dateSelectorContainer {
     display: flex;
     flex-direction: row;
-    width: fit-content;
-    margin-left: auto;
-    margin-right:auto;
+    width: 100%;
     margin-top: 0.6rem;
-    position: sticky;
+    position: fixed;
     bottom: 0rem;
-    margin-bottom: 0.6rem;
+    justify-content: center;
+    background-color: rgb(242, 240, 235);
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    box-shadow: 0.1rem 0 0.1rem gray, -0.1rem 0 .4rem gray;
 
 }
 

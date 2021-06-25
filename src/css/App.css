@@ -9,6 +9,8 @@
     background-color: rgb(242, 240, 235);    
     /* justify-items: 'center';
     align-items: center; */
+    position: relative;
+    top: 0;
 }
 
 .homePage {
@@ -16,6 +18,7 @@
     flex-direction: column;
     width: 100%;
     align-items: center;
+    padding-bottom: 20rem;
 }
 
 body {

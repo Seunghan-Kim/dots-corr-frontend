@@ -8,10 +8,12 @@ const HorizontalScrollCorr = ({data, clickHandler}) => {
 
   return(
     <ScrollBox>
-      {data.map(({ Name, base, Sector, corr_value, code}) => (
+      {data.map(({ Name, date, n_days, Sector, corr_value, code}) => (
         <ColorCardCorr 
+          key={code + date + n_days}
           name={Name}
-          base={base}
+          date={date}
+          n_days={n_days}
           sector={Sector}
           corr_value={corr_value}
           clickHandler={clickHandler}

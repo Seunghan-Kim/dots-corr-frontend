@@ -56,6 +56,7 @@ const ItemThemeView = () => {
     const heightRef = useRef(getWindowDimensions().height)
 
     const getChartData = (code, kind, name) => {
+        console.log(this)
         let url = backendUrl + 'chartdata_' + kind
         console.log(code, name)
 
