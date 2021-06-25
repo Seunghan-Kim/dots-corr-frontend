@@ -4,6 +4,9 @@
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="theme-color" content="#000000" />
     <meta
       name="description"
@@ -40,4 +43,8 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <script>
+    window.onload=function(){ setTimeout(function(){ 		window.scrollTo(0, 1); 	}, 0); }
+  </script>
+
 </html>
