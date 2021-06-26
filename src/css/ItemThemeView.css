@@ -98,3 +98,7 @@
     bottom: 0;
     background-color:  rgb(242, 240, 235);
 }
+
+.resortCorrCardBtnContainer {
+    width: 1rem;
+}
