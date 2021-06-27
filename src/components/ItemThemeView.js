@@ -54,7 +54,7 @@ const ItemThemeView = () => {
     useEffect(() => {
         if (selectedTop30.code) {
             getPriceData(selectedTop30.code, 'top30')
-            getCorrListData(selectedTop30.code)
+            getCorrListData(selectedTop30.code, 'n_days')
         }        
     },[selectedTop30])
 
@@ -95,6 +95,7 @@ const ItemThemeView = () => {
     const getCorrListData = (code, sortOrder) => {
         console.log('getCorrData', code)
         let sortType = sortOrder
+        
         if (!sortType){
             sortType = ''
         } 

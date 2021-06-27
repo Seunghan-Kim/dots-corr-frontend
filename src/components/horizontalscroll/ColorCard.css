@@ -1,19 +1,20 @@
 .color-card {
     /* position: relative; */
-    min-width: 100px;
-    min-height: 80px;
-    height: 10vw;
-    width: 10vw;
+    /* min-width: 130px; */
+    /* min-height: 80px; */
+    height: 5rem;
+    width: 8rem;
     border-radius: 5px;
     box-shadow: 0px 4px 8px rgba(15, 12, 12, 0.8);
     margin: 5px;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     margin-top: 10px;
     margin-bottom: 10px;
     /* background-color: white; */
     background-color: rgb(50,114,78);
     color: white;
+    padding-top: 0.8rem;
   }
 
 .color-card:active {
@@ -49,17 +50,31 @@
 }
 
 .color-card_yield {
-  /* position: absolute; */
-  bottom: 0.1em;
-  left: 8px;
+  /* bottom: 0.1em; */
+  /* left: 8px; */
   border: none;
   outline: none;
-  /* background-color: white; */
   border-radius: 4px;
   padding: 1px;
   font-size: 1.3em;
   text-transform: uppercase;
-  /* opacity: 0.3; */
   transition: all ease 300ms;
   margin: 5px;
+  width: 45%;
+  display: inline-block
+}
+
+.yield-id-container {
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+
+.top30Rank {
+  width: 38%;
+  text-align: right;
+  display: inline-block;
+  position: relative;
+  right: 5px;
+  padding-right: 0.4rem;
 }

@@ -6,19 +6,26 @@ import ColorCardCorr from './ColorCardCorr';
 
 const HorizontalScrollCorr = ({data, clickHandler}) => {
 
+  let totalNumOfCards = data.length
+  console.log(totalNumOfCards)
+
   return(
     <ScrollBox>
-      {data.map(({ Name, date, n_days, Sector, corr_value, code}) => (
+      {data.map((v, i) => {
+        return(
         <ColorCardCorr 
-          key={code + date + n_days}
-          name={Name}
-          date={date}
-          n_days={n_days}
-          sector={Sector}
-          corr_value={corr_value}
-          clickHandler={clickHandler}
-          code={code}/>
-      ))}
+          key={v.code + v.date + v.n_days}
+          name={v.Name}
+          date={v.date}
+          n_days={v.n_days}
+          sector={v.Sector}
+          corr_value={v.corr_value}
+          clickHandler={v.clickHandler}
+          num={i}
+          total={totalNumOfCards}
+          code={v.code}/>
+          )
+      })}
     </ScrollBox>  
   )
 }
