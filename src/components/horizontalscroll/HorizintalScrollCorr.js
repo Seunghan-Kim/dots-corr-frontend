@@ -20,7 +20,7 @@ const HorizontalScrollCorr = ({data, clickHandler}) => {
           n_days={v.n_days}
           sector={v.Sector}
           corr_value={v.corr_value}
-          clickHandler={v.clickHandler}
+          clickHandler={clickHandler}
           num={i}
           total={totalNumOfCards}
           code={v.code}/>
