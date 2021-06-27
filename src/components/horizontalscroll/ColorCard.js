@@ -1,7 +1,7 @@
 import React from 'react';
 import './ColorCard.css';
 
-function ColorCard({ kind, name, 상승률, code, clickHandler }) {
+function ColorCard({ name, 상승률, code, clickHandler }) {
 
   function adjFontSize(nameLength) {
     if (nameLength > 3) {
@@ -11,12 +11,10 @@ function ColorCard({ kind, name, 상승률, code, clickHandler }) {
     }      
   }
 
-  // let colorCode = '#dddddd';
-
   let fontSizeAdj= adjFontSize(name.length)
 
   return (
-    <div className="color-card" onClick={() => {clickHandler(code, kind, name)}}>
+    <div className="color-card" onClick={() => {clickHandler(code, name)}}>
       <div className="color-card_yield" >{parseFloat(상승률).toFixed(1)}</div>
       <div className="color-card__name" style={{fontSize : fontSizeAdj}} >{name}</div>
     </div>

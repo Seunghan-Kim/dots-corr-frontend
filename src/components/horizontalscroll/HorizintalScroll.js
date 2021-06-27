@@ -4,39 +4,19 @@ import ScrollBox from './ScrollBox';
 import ColorCard from './ColorCard';
 
 
-const HorizontalScroll = ({kind, data, clickHandler}) => {
-
-  if (kind === "top30"){
-
-    return(
+const HorizontalScroll = ({data, clickHandler}) => {
+  return(
       <ScrollBox>
         {data.map(({ code, name, 상승률}) => (
           <ColorCard 
             key={code}
-            kind={kind}
             name={name}
             상승률={상승률}
             code={code}
             clickHandler={clickHandler}/>
         ))}
       </ScrollBox>  
-    ) 
-  } else {
-
-      return(
-        <ScrollBox>
-          {data.map(({ code, name, 상승률}) => ( 
-            <ColorCard 
-              key={code}
-              kind={kind}
-              name={name} 
-              상승률={상승률}
-              code={code}
-              clickHandler={clickHandler}/>
-          ))}
-        </ScrollBox>  
-      )
-  }
+  ) 
 }
 
 export default HorizontalScroll;
