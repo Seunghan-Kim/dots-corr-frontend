@@ -25,7 +25,7 @@ const HorizontalScroll = ({data, clickHandler}) => {
             name={v.name}
             상승률={v.상승률}
             code={v.code}
-            id={i}
+            id={i+1}
             clickHandler={clickHandler}/>
           )
           })

@@ -14,7 +14,7 @@ let yyyy = today.getFullYear();
 
 today = yyyy + mm + dd ;
 
-let refData = String(parseInt(today) - 1);
+let refData = today //String(parseInt(today));
 
 console.log(refData)
 
@@ -68,7 +68,7 @@ const ItemThemeView = () => {
     useEffect(() => {
         console.log('after corrList updated', corrListData[0])
         if (corrListData.length !== 0) {
-            console.log(corrListData[0])
+            
             setSelectedCorr({'code':corrListData[0].code, 'name':corrListData[0].Name})
         }
     }, [corrListData])
@@ -83,11 +83,13 @@ const ItemThemeView = () => {
             body: JSON.stringify(newCode)
         }).then(response => response.json())
           .then(json => {  
-            console.log('price data called',json.data)
+            
             if (kind == 'top30') {
+                console.log('top30 price data called')
                 setTop30PriceData(json.data)
             } else {
                 setCorrPriceData(json.data)
+                console.log('Corr price data called')
             }            
           }) 
     }
