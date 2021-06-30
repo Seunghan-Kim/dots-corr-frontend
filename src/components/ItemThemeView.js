@@ -1,22 +1,48 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import HorizontalScroll from './horizontalscroll/HorizintalScroll';
 import HorizontalScrollCorr from './horizontalscroll/HorizintalScrollCorr';
+import ScrollBoxChart from './horizontalscroll/ScrollBoxChart';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
 import Button from '@material-ui/core/Button';
 import '../css/ItemThemeView.css';
 
-let today = new Date();
-let dd = String(today.getDate()).padStart(2, '0');
-let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-let yyyy = today.getFullYear();
+const today = new Date()
+const yesterday = new Date(today)
 
-today = yyyy + mm + dd ;
+yesterday.setDate(yesterday.getDate() - 1)
 
-let refData = today //String(parseInt(today));
+today.toDateString()
+yesterday.toDateString()
 
-console.log(refData)
+let hourMin = String(today.getHours()) + String(today.getMinutes()).padStart(2, '0');
+
+const setToday = () => {
+    console.log(hourMin)
+    if (parseInt(hourMin) < 904) {
+        console.log('early')
+        return (
+            getDateFormat(yesterday)
+        )
+    } else {
+        return (
+            getDateFormat(today)
+        )
+    }
+}
+
+const getDateFormat = (date) => {
+    let dd = String(date.getDate()).padStart(2, '0');
+    let mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    let yyyy = String(date.getFullYear());
+
+    return yyyy + mm + dd
+}
+
+let refDate = setToday();
+
+console.log(refDate)
 
 const ItemThemeView = () => {
 
@@ -30,16 +56,21 @@ const ItemThemeView = () => {
     const [selectedTop30, setSelectedTop30] = useState({});
     const [selectedCorr, setSelectedCorr] = useState({});
 
+    const [top30NewsList, setTop30NewsList] = useState(['a', 'b', 'c']);
+    const [corrNewsList, setCorrNewsList] = useState(['a', 'b', 'c']);
+
     const [top30PriceData, setTop30PriceData] = useState([]);
     const [corrPriceData, setCorrPriceData] = useState([]);
-    const [dateRef1, setDateRef] = useState(refData);
-
+    const [dateRef1, setDateRef] = useState(refDate);
     
 
     useEffect(() => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
         fetch(`${backendUrl}topitems/${dateRef1}`)
         .then(response => response.json())
-        .then(json => setTop30ListData(json.data))        
+        .then(json => {
+            setTop30ListData(json.data);
+            console.log('top30List set')
+        })        
         } , [dateRef1]) 
         
     useEffect(() => { //종목 데이터 다 들어오면 첫번째 종목코드 선정하고 차트를 위한 데이터 불러오기
@@ -52,31 +83,67 @@ const ItemThemeView = () => {
     }, [top30ListData])
 
     useEffect(() => {
+        console.log('1-1')
         if (selectedTop30.code) {
+            console.log('1-2')
             getPriceData(selectedTop30.code, 'top30')
             getCorrListData(selectedTop30.code, 'n_days')
         }        
     },[selectedTop30])
 
     useEffect(()=>{
+        console.log('2-1')
         if (selectedCorr.code){
-            getPriceData(selectedCorr.code, 'corr')
-            console.log('bb')
+            console.log('2-2')
+            getPriceData(selectedCorr.code, 'corr')            
         }
     },[selectedCorr])
 
     useEffect(() => {
-        console.log('after corrList updated', corrListData[0])
+        console.log('corrList set', corrListData[0])
         if (corrListData.length !== 0) {
-            
+            console.log('corrListData updated')
             setSelectedCorr({'code':corrListData[0].code, 'name':corrListData[0].Name})
         }
     }, [corrListData])
 
+    useEffect(() => {
+        if (top30PriceData.length !== 0) {
+            getGoogleNewsHeader('top30');
+        }
+    }, [top30PriceData])
+
+    useEffect(() => {
+        if (corrPriceData.length !== 0) {
+            getGoogleNewsHeader('corr');
+        }
+    }, [corrPriceData])
+
+    useEffect(()=>{
+
+    },[corrPriceData])
+
+    const getGoogleNewsHeader = (kind) => {
+        let keyword;
+        if (kind === 'top30') {
+            keyword = selectedTop30.name
+        } else {
+            keyword = selectedCorr.name
+        }
+        let url = `${backendUrl}news`;
+            let body = {"keyword" : keyword};
+            fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(body)
+            }).then(response => response.json())
+            .then(json => console.log(json))
+    }
+
     const getPriceData = (code, kind) => {
         console.log('getPriceData', code)
         let url = `${backendUrl}chartdata_top30`
-        let newCode = {'code' : code, 'date': dateRef1 }
+        let newCode = {'code' : code, 'date': dateRef1}
         fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -84,7 +151,7 @@ const ItemThemeView = () => {
         }).then(response => response.json())
           .then(json => {  
             
-            if (kind == 'top30') {
+            if (kind === 'top30') {
                 console.log('top30 price data called')
                 setTop30PriceData(json.data)
             } else {
@@ -138,9 +205,27 @@ const ItemThemeView = () => {
         setSelectedCorr({'code':code, 'name':name})
     }
 
+    const NewsList = ({data}) => {
+        // let data = Array orgData;
+        console.log('aa', data)
+        if (data) {
+            console.log('bb')
+            return (
+
+                <ul>
+                    {data.map((item) => (<li>{item}</li>))}
+                </ul>
+            )
+        } else { return (
+            <div>empty</div>
+            )}
+        
+    }
+
     return(
         <div className='mainContainer'>
-            <div className='chartContainer'>
+            <ScrollBoxChart>
+            <div className='chartContainer'>                
                 <div className='chartItemName'>{selectedTop30.name}</div>
                 <LineChart
                     width={360}
@@ -184,7 +269,13 @@ const ItemThemeView = () => {
                     <Line type="monotone" dataKey="종가" stroke="#82ca9d" dot={false}/>
                 </LineChart>
             </div>
-
+            <div className="newsContainer">
+                <NewsList data={top30NewsList}/>
+            </div>
+            <div className="newsContainer">
+                <NewsList data={corrNewsList}/>
+            </div>
+            </ScrollBoxChart>
             <div className='itemScrollBoxContainer'>           
                 <div className='top30HeraderContainer'>
                     <div className='top30DateText'>{selectedTop30.name}</div>
