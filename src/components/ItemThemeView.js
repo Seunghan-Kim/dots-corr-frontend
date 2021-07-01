@@ -307,7 +307,7 @@ const ItemThemeView = () => {
             </div>
 
             <div className='resortCorrCardBtnContainer'>
-                <Button variant="contained" color="primary" onClick={()=>resortCorrCard('n_days')}>n_days</Button>
+                {/* <Button variant="contained" color="primary" onClick={()=>resortCorrCard('n_days')}>n_days</Button> */}
                 {/* <Button variant="contained" color="primary" onClick={()=>resortCorrCard('')}>Re-sort</Button> */}
             </div>
 
