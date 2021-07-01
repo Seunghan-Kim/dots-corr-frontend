@@ -226,9 +226,15 @@ const ItemThemeView = () => {
             console.log('bb')
             return (
 
-                <ul>
-                    {data.map((item) => (<li className="newHeaderText">{item.title}</li>))}
-                </ul>
+                <div>
+                    {data.map((item) => (
+                        <div>
+                            <div className="newsPublishedText">{item.published.slice(0,16)}</div>
+                            <div className="newsHeaderText">{item.title}</div>                            
+                        </div>
+                    
+                    ))}
+                </div>
             )
         } else { return (
             <div>Loading...</div>
@@ -239,28 +245,28 @@ const ItemThemeView = () => {
     return(
         <div className='mainContainer'>
             <ScrollBoxChart>
-            <div className='chartContainer'>                
+            <div className='chartContainer'> 
                 <div className='chartItemName'>{selectedTop30.name}</div>
                 <LineChart
-                    width={360}
-                    height={150}
-                    data={top30PriceData}
-                    margin={{
-                        top: 5,
-                        right: 30,
-                        left: 0,
-                        bottom: 5,
-                    }}
-                    fontSize={10}
-                    >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="date" />
-                    <YAxis type="number" domain={['auto', 'auto']}/>
-                    <Tooltip />
-                    {/* <Legend /> */}
-                    {/* <Line type="monotone" dataKey="y" stroke="#8884d8" activeDot={{ r: 8 }} /> */}
-                    <Line type="monotone" dataKey="종가" stroke="#82ca9d" dot={false}/>
-                </LineChart>
+                        width={360}
+                        height={150}
+                        data={top30PriceData}
+                        margin={{
+                            top: 5,
+                            right: 30,
+                            left: 0,
+                            bottom: 5,
+                        }}
+                        fontSize={10}
+                        >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis type="number" domain={['auto', 'auto']}/>
+                        <Tooltip />
+                        {/* <Legend /> */}
+                        {/* <Line type="monotone" dataKey="y" stroke="#8884d8" activeDot={{ r: 8 }} /> */}
+                        <Line type="monotone" dataKey="종가" stroke="#82ca9d" dot={false}/>
+                    </LineChart>
                 <div className='chartItemName'>{selectedCorr.name}</div>
                 <LineChart
                     width={360}
@@ -287,7 +293,7 @@ const ItemThemeView = () => {
                 <div className="top30NewsContainer">
                     <NewsList data={top30NewsList}/>
                 </div>
-                <div className="CorrNewsContainer">
+                <div className="corrNewsContainer">
                     <NewsList data={corrNewsList}/>
                 </div>
             </div>
