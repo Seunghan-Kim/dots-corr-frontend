@@ -11,6 +11,8 @@ import '../css/ItemThemeView.css';
 const today = new Date()
 const yesterday = new Date(today)
 
+let now = new Date(); // 나중에 수정하자
+
 yesterday.setDate(yesterday.getDate() - 1)
 
 today.toDateString()
@@ -22,10 +24,12 @@ const setToday = () => {
     console.log(hourMin)
     if (parseInt(hourMin) < 904) {
         console.log('early')
+        now = yesterday
         return (
             getDateFormat(yesterday)
         )
     } else {
+        now = today
         return (
             getDateFormat(today)
         )
@@ -56,8 +60,8 @@ const ItemThemeView = () => {
     const [selectedTop30, setSelectedTop30] = useState({});
     const [selectedCorr, setSelectedCorr] = useState({});
 
-    const [top30NewsList, setTop30NewsList] = useState(['a', 'b', 'c']);
-    const [corrNewsList, setCorrNewsList] = useState(['a', 'b', 'c']);
+    const [top30NewsList, setTop30NewsList] = useState();
+    const [corrNewsList, setCorrNewsList] = useState();
 
     const [top30PriceData, setTop30PriceData] = useState([]);
     const [corrPriceData, setCorrPriceData] = useState([]);
@@ -119,25 +123,31 @@ const ItemThemeView = () => {
         }
     }, [corrPriceData])
 
-    useEffect(()=>{
-
-    },[corrPriceData])
-
-    const getGoogleNewsHeader = (kind) => {
+    const getGoogleNewsHeader = async (kind) => {
         let keyword;
         if (kind === 'top30') {
             keyword = selectedTop30.name
         } else {
             keyword = selectedCorr.name
         }
-        let url = `${backendUrl}news`;
-            let body = {"keyword" : keyword};
-            fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(body)
-            }).then(response => response.json())
-            .then(json => console.log(json))
+        let url = `${backendUrl}news/`;
+        let body = {"keyword" : keyword};
+
+        fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body)
+        }).then(response => response.json())
+        .then(json => {
+            console.log('news results', json.data);
+            if (kind === 'top30') {
+                let trimmed = json.data.slice(0,5)
+                setTop30NewsList(trimmed)
+            } else {
+                let trimmed = json.data.slice(0,5)
+                setCorrNewsList(trimmed)
+            }
+        })
     }
 
     const getPriceData = (code, kind) => {
@@ -178,17 +188,21 @@ const ItemThemeView = () => {
     }
 
     const decreaseDate = () => {
-        let currentDate = parseInt(dateRef1)
-        let newDate = String(currentDate - 1)
+
+        now.setDate(now.getDate() - 1)
+
+        let newDate = getDateFormat(now)
         setDateRef(newDate)
         console.log('back')
+        console.log('one day before', now)
     }
 
     const increaseDate = () => {
-        let currentDate = parseInt(dateRef1)
-        let newDate = String(currentDate + 1)
+        now.setDate(now.getDate() + 1)
+        let newDate = getDateFormat(now)
         setDateRef(newDate)
-        console.log('fwd')
+        console.log('forward')
+        console.log('one day after', now)
     }
     
     const resortCorrCard = (sortOrder) => {
@@ -213,11 +227,11 @@ const ItemThemeView = () => {
             return (
 
                 <ul>
-                    {data.map((item) => (<li>{item}</li>))}
+                    {data.map((item) => (<li className="newHeaderText">{item.title}</li>))}
                 </ul>
             )
         } else { return (
-            <div>empty</div>
+            <div>Loading...</div>
             )}
         
     }
@@ -270,10 +284,12 @@ const ItemThemeView = () => {
                 </LineChart>
             </div>
             <div className="newsContainer">
-                <NewsList data={top30NewsList}/>
-            </div>
-            <div className="newsContainer">
-                <NewsList data={corrNewsList}/>
+                <div className="top30NewsContainer">
+                    <NewsList data={top30NewsList}/>
+                </div>
+                <div className="CorrNewsContainer">
+                    <NewsList data={corrNewsList}/>
+                </div>
             </div>
             </ScrollBoxChart>
             <div className='itemScrollBoxContainer'>           
