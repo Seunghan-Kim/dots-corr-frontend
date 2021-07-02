@@ -68,14 +68,20 @@ const ItemThemeView = () => {
     const [dateRef1, setDateRef] = useState(refDate);
     
 
-    useEffect(() => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
-        fetch(`${backendUrl}topitems/${dateRef1}`)
-        .then(response => response.json())
-        .then(json => {
-            setTop30ListData(json.data);
-            console.log('top30List set')
-        })        
+    useEffect(async () => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
+
+        let url = `${backendUrl}topitems/${dateRef1}`
+        let response = await fetch(url)
+        let json = await response.json()
+        let data = await json.data
+
+        setTop30ListData(data)
+
         } , [dateRef1]) 
+
+    const getOneDayBefore = (theDay) => {
+        return theDay.setDate(theDay.getDate()-1)
+    }
         
     useEffect(() => { //종목 데이터 다 들어오면 첫번째 종목코드 선정하고 차트를 위한 데이터 불러오기
         if (top30ListData.length !== 0) {
@@ -100,6 +106,8 @@ const ItemThemeView = () => {
         if (selectedCorr.code){
             console.log('2-2')
             getPriceData(selectedCorr.code, 'corr')            
+        } else {
+            setCorrPriceData([])
         }
     },[selectedCorr])
 
@@ -108,6 +116,8 @@ const ItemThemeView = () => {
         if (corrListData.length !== 0) {
             console.log('corrListData updated')
             setSelectedCorr({'code':corrListData[0].code, 'name':corrListData[0].Name})
+        } else {
+            setSelectedCorr({})
         }
     }, [corrListData])
 
@@ -120,6 +130,8 @@ const ItemThemeView = () => {
     useEffect(() => {
         if (corrPriceData.length !== 0) {
             getGoogleNewsHeader('corr');
+        } else {
+            setCorrNewsList([])
         }
     }, [corrPriceData])
 
@@ -171,20 +183,25 @@ const ItemThemeView = () => {
           }) 
     }
 
-    const getCorrListData = (code, sortOrder) => {
+    const getCorrListData = async (code, sortOrder) => {
         console.log('getCorrData', code)
         let sortType = sortOrder
         
         if (!sortType){
             sortType = ''
         } 
-        let fetchUrl = `${backendUrl}corr2/${code}/${sortOrder}`
-        fetch(fetchUrl)
-        .then(response => response.json())
-        .then(json => {            
-            setCorrListData(json.data)
-            console.log('corr', json.data)
-        })
+
+        let url = `${backendUrl}corr2/${code}/${sortOrder}`
+        try {
+            let response = await fetch(url);
+            let json = await response.json();
+            let data = await json.data;
+            setCorrListData(data)
+        }
+        catch (err){
+            console.log('err', err)
+            setCorrListData([])
+        }
     }
 
     const decreaseDate = () => {
