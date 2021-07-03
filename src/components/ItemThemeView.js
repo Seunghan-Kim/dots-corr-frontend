@@ -3,6 +3,8 @@ import React, { useState, useEffect } from 'react';
 import HorizontalScroll from './horizontalscroll/HorizintalScroll';
 import HorizontalScrollCorr from './horizontalscroll/HorizintalScrollCorr';
 import ScrollBoxChart from './horizontalscroll/ScrollBoxChart';
+import Top30HistoryWrapper from './Top30HistoryWrapper';
+
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 
 import Button from '@material-ui/core/Button';
@@ -21,9 +23,7 @@ yesterday.toDateString()
 let hourMin = String(today.getHours()) + String(today.getMinutes()).padStart(2, '0');
 
 const setToday = () => {
-    console.log(hourMin)
     if (parseInt(hourMin) < 904) {
-        console.log('early')
         now = yesterday
         return (
             getDateFormat(yesterday)
@@ -46,8 +46,6 @@ const getDateFormat = (date) => {
 
 let refDate = setToday();
 
-console.log(refDate)
-
 const ItemThemeView = () => {
 
 
@@ -63,48 +61,47 @@ const ItemThemeView = () => {
     const [top30NewsList, setTop30NewsList] = useState();
     const [corrNewsList, setCorrNewsList] = useState();
 
+    const [top30HistoryData, setTop30HistoryData] = useState([]);
+
     const [top30PriceData, setTop30PriceData] = useState([]);
     const [corrPriceData, setCorrPriceData] = useState([]);
     const [dateRef1, setDateRef] = useState(refDate);
     
 
-    useEffect(async () => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
+    useEffect(() => { //시작할때 데이터 불러오기 + 종목, 테마 데이터 불러오기
 
-        let url = `${backendUrl}topitems/${dateRef1}`
-        let response = await fetch(url)
-        let json = await response.json()
-        let data = await json.data
-
-        setTop30ListData(data)
+        const fetchData = async () => {
+            let url = `${backendUrl}topitems/${dateRef1}`
+            let response = await fetch(url)
+            let json = await response.json()
+            let data = await json.data
+    
+            setTop30ListData(data)
+        }
+        
+        fetchData();
 
         } , [dateRef1]) 
-
-    const getOneDayBefore = (theDay) => {
-        return theDay.setDate(theDay.getDate()-1)
-    }
         
     useEffect(() => { //종목 데이터 다 들어오면 첫번째 종목코드 선정하고 차트를 위한 데이터 불러오기
         if (top30ListData.length !== 0) {
-            console.log(top30ListData[0])
             let code = top30ListData[0].code
             let name = top30ListData[0].name
             setSelectedTop30({'code':code, 'name':name})
+
+            getTop30History(dateRef1)
         }
     }, [top30ListData])
 
     useEffect(() => {
-        console.log('1-1')
         if (selectedTop30.code) {
-            console.log('1-2')
             getPriceData(selectedTop30.code, 'top30')
             getCorrListData(selectedTop30.code, 'n_days')
         }        
     },[selectedTop30])
 
     useEffect(()=>{
-        console.log('2-1')
         if (selectedCorr.code){
-            console.log('2-2')
             getPriceData(selectedCorr.code, 'corr')            
         } else {
             setCorrPriceData([])
@@ -112,9 +109,7 @@ const ItemThemeView = () => {
     },[selectedCorr])
 
     useEffect(() => {
-        console.log('corrList set', corrListData[0])
         if (corrListData.length !== 0) {
-            console.log('corrListData updated')
             setSelectedCorr({'code':corrListData[0].code, 'name':corrListData[0].Name})
         } else {
             setSelectedCorr({})
@@ -135,6 +130,17 @@ const ItemThemeView = () => {
         }
     }, [corrPriceData])
 
+    const getTop30History = async (date) => {
+        let url = `${backendUrl}top30/history/${date}`
+
+        let response = await fetch(url);
+        let json = await response.json()
+        let data = await json.data
+
+        setTop30HistoryData(data)
+
+    }
+
     const getGoogleNewsHeader = async (kind) => {
         let keyword;
         if (kind === 'top30') {
@@ -151,7 +157,6 @@ const ItemThemeView = () => {
             body: JSON.stringify(body)
         }).then(response => response.json())
         .then(json => {
-            console.log('news results', json.data);
             if (kind === 'top30') {
                 let trimmed = json.data.slice(0,5)
                 setTop30NewsList(trimmed)
@@ -163,9 +168,8 @@ const ItemThemeView = () => {
     }
 
     const getPriceData = (code, kind) => {
-        console.log('getPriceData', code)
-        let url = `${backendUrl}chartdata_top30`
-        let newCode = {'code' : code, 'date': dateRef1}
+        let url = `${backendUrl}chartdata_top30`;
+        let newCode = {'code' : code, 'date': dateRef1};
         fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -174,17 +178,14 @@ const ItemThemeView = () => {
           .then(json => {  
             
             if (kind === 'top30') {
-                console.log('top30 price data called')
-                setTop30PriceData(json.data)
+                setTop30PriceData(json.data);
             } else {
-                setCorrPriceData(json.data)
-                console.log('Corr price data called')
+                setCorrPriceData(json.data);
             }            
           }) 
     }
 
     const getCorrListData = async (code, sortOrder) => {
-        console.log('getCorrData', code)
         let sortType = sortOrder
         
         if (!sortType){
@@ -199,7 +200,6 @@ const ItemThemeView = () => {
             setCorrListData(data)
         }
         catch (err){
-            console.log('err', err)
             setCorrListData([])
         }
     }
@@ -210,16 +210,12 @@ const ItemThemeView = () => {
 
         let newDate = getDateFormat(now)
         setDateRef(newDate)
-        console.log('back')
-        console.log('one day before', now)
     }
 
     const increaseDate = () => {
         now.setDate(now.getDate() + 1)
         let newDate = getDateFormat(now)
         setDateRef(newDate)
-        console.log('forward')
-        console.log('one day after', now)
     }
     
     const resortCorrCard = (sortOrder) => {
@@ -227,20 +223,19 @@ const ItemThemeView = () => {
     }
 
     const top30ClickHandler = (code, name) => {
-        console.log('clicked', code, name)
-        setSelectedTop30({'code':code, 'name':name})
+        if (code !== selectedTop30.code) {
+            setSelectedTop30({'code':code, 'name':name})
+        }
     }
 
     const corrClickHandler = (code, name) => {
-        console.log('corr card clicked', code, name)
-        setSelectedCorr({'code':code, 'name':name})
+        if (code !== selectedCorr.code){
+            setSelectedCorr({'code':code, 'name':name})
+        }
     }
 
     const NewsList = ({data}) => {
-        // let data = Array orgData;
-        console.log('aa', data)
         if (data) {
-            console.log('bb')
             return (
 
                 <div>
@@ -334,6 +329,10 @@ const ItemThemeView = () => {
                     <div className='top30HeaderText'>상승률 TOP30</div>
                 </div>
                 <HorizontalScroll data={top30ListData} clickHandler={top30ClickHandler}/>
+            </div>
+
+            <div className='top30HistoryChartContainer'>
+                <Top30HistoryWrapper data={top30HistoryData} code={selectedTop30}/>
             </div>
 
             <div className='dateSelectorContainer'>

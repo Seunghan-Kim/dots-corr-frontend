@@ -146,3 +146,51 @@
 .newsPublishedText {
     font-size: 0.4rem;
 }
+
+.top30HistoryChartContainer {
+    width: 100%;
+}
+
+.top30Items {
+    width: fit-content;
+    display: inline-block;
+}
+
+.oneDayContainer {
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+    width: fit-content;
+}
+
+.selectedItem {
+    display: block;
+    width: 0.8rem;
+    height: 0.2rem;
+
+    box-shadow: 0.2px 0 0.2px grey, -0.2px 0 0.4px grey;
+    
+    background-color: red;
+    margin: 1px;
+    border-radius: 0.1rem;
+
+
+}
+
+.unSelectedItem {
+    display: block;
+    width: 0.8rem;
+    height: 0.2rem;
+
+    box-shadow: 0.2px 0 0.2px grey, -0.2px 0 0.4px grey;
+
+    background-color: white;
+    margin: 1px;
+    border-radius: 0.1rem;
+}
+
+.line {
+    width: fit-content;
+    display: inline-block;
+    margin-right: 0.4rem;
+}

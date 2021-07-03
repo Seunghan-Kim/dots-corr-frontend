@@ -9,7 +9,6 @@ const HorizontalScrollCorr = ({data, clickHandler}) => {
   if (data.length !== 0) {
 
     let totalNumOfCards = data.length
-    console.log(totalNumOfCards)
     
     let codeList = []
 
