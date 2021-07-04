@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import HorizontalScroll from './horizontalscroll/HorizintalScroll';
 import HorizontalScrollCorr from './horizontalscroll/HorizintalScrollCorr';
+import HorizontalScrollTheme from './horizontalscroll/HorizintalScrollTheme'
 import ScrollBoxChart from './horizontalscroll/ScrollBoxChart';
 import Top30HistoryWrapper from './Top30HistoryWrapper';
 
@@ -60,6 +61,7 @@ const ItemThemeView = () => {
 
     const [top30NewsList, setTop30NewsList] = useState();
     const [corrNewsList, setCorrNewsList] = useState();
+    const [themeList, setThemeList] = useState([]);
 
     const [top30HistoryData, setTop30HistoryData] = useState([]);
 
@@ -97,6 +99,7 @@ const ItemThemeView = () => {
         if (selectedTop30.code) {
             getPriceData(selectedTop30.code, 'top30')
             getCorrListData(selectedTop30.code, 'n_days')
+            getThemeListData(selectedTop30.code)
         }        
     },[selectedTop30])
 
@@ -201,6 +204,23 @@ const ItemThemeView = () => {
         }
         catch (err){
             setCorrListData([])
+        }
+    }
+
+    const getThemeListData = async (code) => {
+        console.log('theme_code', code)
+        let url = `${backendUrl}get_codes_with_same_theme/${code}`;
+
+        try {
+            let response = await fetch(url);
+            let json = await response.json();
+            let data = await json.data;
+            setThemeList(data)
+            console.log('theme', data)
+        }
+        catch (err){
+            console.log('err', err)
+            setThemeList([])
         }
     }
 
@@ -316,6 +336,14 @@ const ItemThemeView = () => {
                     <div className='top30HeaderText'>와 주가 변동이 비슷한 종목들</div>
                 </div>
                 <HorizontalScrollCorr data={corrListData} clickHandler={corrClickHandler}/>   
+            </div>
+            
+            <div className='itemScrollBoxContainer'>           
+                <div className='top30HeraderContainer'>
+                    <div className='top30DateText'>{selectedTop30.name}</div>
+                    <div className='top30HeaderText'>와 같은 테마 종목들</div>
+                </div>
+                <HorizontalScrollTheme data={themeList} code={selectedTop30.code} clickHandler={corrClickHandler}/>   
             </div>
 
             <div className='resortCorrCardBtnContainer'>

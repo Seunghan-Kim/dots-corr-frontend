@@ -39,7 +39,7 @@ const HorizontalScrollCorr = ({data, clickHandler}) => {
   } else {
     return(
       
-        <div>Nothing to show</div>
+        <div className='nothingText'>Nothing to show</div>
       
     )
   }

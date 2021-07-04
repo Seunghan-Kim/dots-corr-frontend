@@ -194,3 +194,9 @@
     display: inline-block;
     margin-right: 0.4rem;
 }
+
+.nothingText {
+    font-size: 0.8rem;
+    margin-left: 1.2rem;
+    margin-top: 0.8rem;
+}
